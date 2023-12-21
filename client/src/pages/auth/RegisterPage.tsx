@@ -1,5 +1,11 @@
 import React from "react";
+import { Page } from "../../utils/styles";
+import { RegisterForm } from "../../components/form/RegisterForm";
 
 export const RegisterPage = () => {
-  return <div>RegisterPage</div>;
+  return (
+    <Page>
+      <RegisterForm />
+    </Page>
+  );
 };

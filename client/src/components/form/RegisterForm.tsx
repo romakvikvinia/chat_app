@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import {
   Button,
   InputContainer,
@@ -6,16 +6,20 @@ import {
   InputLabel,
 } from "../../utils/styles";
 // styles
-import styes from "./index.module.scss";
+import styles from "./index.module.scss";
+import { Link } from "react-router-dom";
 
 export const RegisterForm = () => {
+  const handleSubmit = useCallback((e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+  }, []);
   return (
-    <form className={styes.form}>
+    <form className={styles.form} onSubmit={handleSubmit}>
       <InputContainer>
         <InputLabel htmlFor="email">Email</InputLabel>
         <InputField id="email" />
       </InputContainer>
-      <section className={styes.nameFieldRow}>
+      <section className={styles.nameFieldRow}>
         <InputContainer>
           <InputLabel htmlFor="firstName">First Name</InputLabel>
           <InputField id="firstName" />
@@ -29,9 +33,13 @@ export const RegisterForm = () => {
         <InputLabel htmlFor="password">Password</InputLabel>
         <InputField type="password" id="password" />
       </InputContainer>
-      <Button type="submit" className={styes.button}>
+      <Button type="submit" className={styles.button}>
         Create My Account
       </Button>
+      <div className={styles.footerText}>
+        <span>Already Have an account ?</span>
+        <Link to="/login">Login</Link>
+      </div>
     </form>
   );
 };

@@ -1,11 +1,11 @@
 import React from "react";
-import { RegisterForm } from "../../components/form/RegisterForm";
 import { Page } from "../../utils/styles";
+import { LoginForm } from "../../components/form/LoginForm";
 
 export const LoginPage = () => {
   return (
     <Page>
-      <RegisterForm />
+      <LoginForm />
     </Page>
   );
 };

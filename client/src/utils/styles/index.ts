@@ -41,6 +41,22 @@ export const Button = styled.button`
   border: none;
   border-radius: 10px;
   padding: 25px 0;
+  font-weight: bold;
+  transition: 250ms background ease;
+  transition: 500ms border ease;
+  border: 2px solid #2b09ff;
+  box-sizing: border-box;
+  &:focus {
+    background: #3415ff;
+    border: 2px solid #fff;
+  }
+  &:hover {
+    cursor: pointer;
+    background: #3415ff;
+  }
+  &:hover {
+    background: #3a1cff;
+  }
 `;
 
 export const Page = styled.div`
