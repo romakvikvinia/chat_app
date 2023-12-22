@@ -21,19 +21,18 @@ services:
       # - redis
 
   db:
-    image: mongo
-    hostname: mongo
+    image: mysql:8
+    container_name: mysql
     restart: always
-    container_name: mongo
+    command: --default-authentication-plugin=mysql_native_password
     environment:
-      # MONGO_INITDB_ROOT_USERNAME: root
-      # MONGO_INITDB_ROOT_PASSWORD: root
-      MONGODB_DATABASE: trekspot
+      MYSQL_ROOT_PASSWORD: ${DATABASE_PORT}
+      MYSQL_DATABASE: ${DATABASE_NAME}
+    volumes:
+      - mysqldata:/var/lib/mysql
 
     ports:
-      - "27017:27017"
-    volumes:
-      - dbdata:/data/db
+      - 3306:3306
 
   # caching
   # redis:
@@ -81,5 +80,5 @@ services:
       # - dev
 
 volumes:
-  dbdata:
+  mysqldata:
   # redis:
