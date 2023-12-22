@@ -79,7 +79,12 @@ export const ConversationSideBarStyle = styled.aside`
   overflow-y: scroll;
   &::-webkit-scrollbar {
     display: none;
+    // with: 10px;
+    // height: 5px;
   }
+  // &::-webkit-scrollbar-thumb {
+  //   background-color: #2d2d2d;
+  // }
 `;
 
 export const ConversationSideBarHeader = styled.header`
@@ -100,7 +105,7 @@ export const ConversationSideBarHeader = styled.header`
 
 export const ConversationChanelPageStyle = styled.div`
   height: 100%;
-  margin-left: 350px;
+  margin-left: ${SIDEBAR_WITH}px;
 `;
 export const ConversationPanelStyle = styled.div`
   height: 100%;
