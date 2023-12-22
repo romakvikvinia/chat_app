@@ -1,0 +1,85 @@
+version: "3.9"
+services:
+  dev:
+    build:
+      context: ./
+      target: development
+      dockerfile: dockerfiles/api.dockerfile
+    hostname: api_dev
+    container_name: api_dev_service
+    env_file:
+      - api/.env
+    volumes:
+      - ./api:/app
+      - /app/node_modules
+    ports:
+      - 8080:8080
+    command: npm run start:dev
+    restart: unless-stopped
+    depends_on:
+      - db
+      # - redis
+
+  db:
+    image: mongo
+    hostname: mongo
+    restart: always
+    container_name: mongo
+    environment:
+      # MONGO_INITDB_ROOT_USERNAME: root
+      # MONGO_INITDB_ROOT_PASSWORD: root
+      MONGODB_DATABASE: trekspot
+
+    ports:
+      - "27017:27017"
+    volumes:
+      - dbdata:/data/db
+
+  # caching
+  # redis:
+  #   container_name: redis_cache
+  #   command: /bin/sh -c "redis-server --requirepass $$REDIS_PASS"
+  #   env_file:
+  #     - api/.env
+  #   image: redis
+  #   ports:
+  #     - 6379:6379
+  #   volumes:
+  #     - redis:/data
+
+  prod:
+    build:
+      context: ./
+      target: production
+      dockerfile: dockerfiles/api.dockerfile
+    hostname: api_prod
+    container_name: api_prod_service
+    env_file:
+      - api/.env
+    volumes:
+      - ./api:/app
+      - /app/node_modules
+      - /app/dist
+    ports:
+      - 8080:8080
+    command: npm run start:prod
+    restart: on-failure
+    depends_on:
+      - db
+    # - redis
+
+  nginx:
+    build:
+      context: ./
+      dockerfile: dockerfiles/nginx.dockerfile
+    hostname: nginx_prod
+    container_name: nginx_prod_service
+    ports:
+      - "80:80"
+    depends_on:
+      - prod
+      # - dev
+
+volumes:
+  dbdata:
+  # redis:
