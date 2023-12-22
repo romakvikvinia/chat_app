@@ -1,14 +1,44 @@
 import React from "react";
 import { TbEdit } from "react-icons/tb";
-import { ConversationSideBarStyle } from "../../utils/styles";
+import {
+  ConversationItemsWrapper,
+  ConversationSideBarStyle,
+  ConversationItem,
+  ConversationSideBarHeader,
+} from "../../utils/styles";
+import { ConversationType } from "../../utils/types";
 
-export const ConversationAside = () => {
+// css
+import styles from "./index.module.scss";
+
+type ConversationAsideProps = {
+  conversations: ConversationType[];
+};
+
+export const ConversationAside: React.FC<ConversationAsideProps> = ({
+  conversations,
+}) => {
   return (
     <ConversationSideBarStyle>
-      <header>
+      <ConversationSideBarHeader>
         <h1>ConversationAside</h1>
         <TbEdit size={40} />
-      </header>
+      </ConversationSideBarHeader>
+      <ConversationItemsWrapper>
+        {conversations.map((conversation) => (
+          <ConversationItem key={`conversation-${conversation.id}`}>
+            <div className={styles.conversationAvatar}></div>
+            <div>
+              <span className={styles.conversationName}>
+                {conversation.name}
+              </span>
+              <span className={styles.conversationLastMessage}>
+                {conversation.lastMessage}
+              </span>
+            </div>
+          </ConversationItem>
+        ))}
+      </ConversationItemsWrapper>
     </ConversationSideBarStyle>
   );
 };
