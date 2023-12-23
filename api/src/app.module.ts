@@ -4,6 +4,7 @@ import { configuration } from './config';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import entities from './utils/typeorm';
 
 @Module({
   imports: [
@@ -14,12 +15,13 @@ import { TypeOrmModule } from '@nestjs/typeorm';
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: (config: ConfigService) => ({
+        type: 'mysql',
         host: config.get<string>('database.host'),
-        port: config.get<string>('database.port'),
+        port: config.get<number>('database.port'),
         username: config.get<string>('database.username'),
         password: config.get<string>('database.password'),
         database: config.get<string>('database.name'),
-        entities: [],
+        entities: [...entities],
         synchronize: true,
       }),
       inject: [ConfigService],

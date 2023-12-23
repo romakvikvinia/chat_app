@@ -1,4 +1,13 @@
-import { Body, Controller, Get, Inject, Post } from '@nestjs/common';
+import {
+  BadRequestException,
+  Body,
+  ClassSerializerInterceptor,
+  Controller,
+  Get,
+  Inject,
+  Post,
+  UseInterceptors,
+} from '@nestjs/common';
 
 import { Routes, Services } from '../utils/constants';
 import { IAuthService } from './auth';
@@ -14,10 +23,10 @@ export class AuthController {
     @Inject(Services.USERS) private readonly usersService: IUserService,
   ) {}
 
+  @UseInterceptors(ClassSerializerInterceptor)
   @Post('/signup')
   signUp(@Body() createUserDto: CreateAuthDto) {
-    console.log(createUserDto);
-    this.usersService.create(createUserDto);
+    return this.usersService.create(createUserDto);
   }
 
   @Post('/signin')

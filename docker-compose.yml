@@ -25,9 +25,11 @@ services:
     container_name: mysql
     restart: always
     command: --default-authentication-plugin=mysql_native_password
+    env_file:
+      - api/.env
     environment:
-      MYSQL_ROOT_PASSWORD: ${DATABASE_PORT}
-      MYSQL_DATABASE: ${DATABASE_NAME}
+      MYSQL_ROOT_PASSWORD: ${DATABASE_PASSWORD:-rocketman}
+      MYSQL_DATABASE: ${DATABASE_NAME:-chat-app}
     volumes:
       - mysqldata:/var/lib/mysql
 
