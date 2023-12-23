@@ -14,6 +14,7 @@ import { IAuthService } from './auth';
 import { CreateAuthDto } from './dto/create-auth.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { IUserService } from 'src/users/user';
+import { LoginAuthDto } from './dto/login-auth.dto';
 
 @ApiTags('Auth')
 @Controller(Routes.AUTH)
@@ -30,7 +31,9 @@ export class AuthController {
   }
 
   @Post('/signin')
-  signIn() {}
+  signIn(@Body() loginAuthDto: LoginAuthDto) {
+    console.log(loginAuthDto);
+  }
 
   @Get('/status')
   status() {}
