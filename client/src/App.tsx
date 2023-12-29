@@ -6,6 +6,7 @@ import { RegisterPage } from "./pages/auth/RegisterPage";
 import { ConversationsPage } from "./pages/conversation/ConversationsPage";
 import { ConversationChanelPage } from "./pages/conversation/ConversationChanelPage";
 import { ConversationPanel } from "./components/conversation/ConversationPanel";
+import { PrivateRoute } from "./components/common/PrivateRoute";
 
 function App() {
   return (
@@ -13,9 +14,30 @@ function App() {
       <Routes>
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/login" element={<LoginPage />} />
-        <Route path="/conversations" element={<ConversationsPage />}>
-          <Route index element={<ConversationPanel />} />
-          <Route path=":id" element={<ConversationChanelPage />} />
+        <Route
+          path="/conversations"
+          element={
+            <PrivateRoute>
+              <ConversationsPage />
+            </PrivateRoute>
+          }
+        >
+          <Route
+            index
+            element={
+              <PrivateRoute>
+                <ConversationPanel />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path=":id"
+            element={
+              <PrivateRoute>
+                <ConversationChanelPage />
+              </PrivateRoute>
+            }
+          />
         </Route>
       </Routes>
     </>

@@ -37,6 +37,7 @@ export class AuthService implements IAuthService {
     const user = await this.userService.findUser({ email });
     if (!user) throw new UnauthorizedException(`Invalid Credentials`);
 
-    return compareHash(password, user.password);
+    const isValidCredentials = compareHash(password, user.password);
+    return isValidCredentials ? user : null;
   }
 }

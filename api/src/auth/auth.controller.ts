@@ -1,5 +1,4 @@
 import {
-  BadRequestException,
   Body,
   ClassSerializerInterceptor,
   Controller,
@@ -16,7 +15,9 @@ import { CreateAuthDto } from './dto/create-auth.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { IUserService } from 'src/users/user';
 import { LoginAuthDto } from './dto/login-auth.dto';
-import { LocalAuthGuard } from './guards/session.guard';
+import { AuthenticatedGuard, LocalAuthGuard } from './guards/session.guard';
+import { GetUser } from './decorators/user.decorator';
+import { User } from '../utils/typeorm';
 
 @ApiTags('Auth')
 @Controller(Routes.AUTH)
@@ -39,7 +40,10 @@ export class AuthController {
   }
 
   @Get('/status')
-  status() {}
+  @UseGuards(AuthenticatedGuard)
+  status(@GetUser() user: User) {
+    return user;
+  }
 
   @Post('/logout')
   logout() {}

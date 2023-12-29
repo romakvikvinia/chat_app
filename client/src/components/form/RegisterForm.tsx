@@ -8,24 +8,21 @@ import {
 import styles from "./index.module.scss";
 import { Link } from "react-router-dom";
 import { useForm, SubmitHandler } from "react-hook-form";
-
-interface IRegister {
-  firstName: string;
-  lastName: string;
-  email: string;
-  password: string;
-}
+import { SignUpInput } from "../../api/types";
+import { useSignUpMutation } from "../../api/chat.api";
 
 export const RegisterForm = () => {
+  const [signUp, { isLoading, isSuccess, isError }] = useSignUpMutation();
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<IRegister>();
+  } = useForm<SignUpInput>({
+    defaultValues: { email: "", firstName: "", lastName: "", password: "" },
+  });
 
-  const onSubmit: SubmitHandler<IRegister> = (data) => console.log(data);
-
-  console.log(errors);
+  const onSubmit: SubmitHandler<SignUpInput> = (data) => signUp(data);
+  console.log("isSuccess", isSuccess);
 
   return (
     <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>

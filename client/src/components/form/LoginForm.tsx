@@ -6,24 +6,25 @@ import {
 } from "../../utils/styles";
 // styles
 import styles from "./index.module.scss";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useForm, SubmitHandler } from "react-hook-form";
-
-interface ILogin {
-  email: string;
-  password: string;
-}
+import { useSignInMutation } from "../../api/chat.api";
+import { SignInInput } from "../../api/types";
 
 export const LoginForm = () => {
+  const navigation = useNavigate();
+  const [signIn, { isLoading, isSuccess, isError }] = useSignInMutation();
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<ILogin>();
+  } = useForm<SignInInput>();
 
-  const onSubmit: SubmitHandler<ILogin> = (data) => console.log(data);
+  const onSubmit: SubmitHandler<SignInInput> = (data) => signIn(data);
 
-  console.log(errors);
+  if (isSuccess) {
+    navigation("/conversations");
+  }
 
   return (
     <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
