@@ -1,14 +1,10 @@
-import {
-  BadRequestException,
-  ConflictException,
-  Injectable,
-} from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { IUserService } from './user';
-import { CreateUserType } from 'src/utils/types';
+import { CreateUserType, FindUserType } from 'src/utils/types';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from '../utils/typeorm';
-import { hasPassword } from 'src/utils/helper';
+import { hasPassword } from '../utils/helper';
 
 @Injectable()
 export class UsersService implements IUserService {
@@ -23,5 +19,9 @@ export class UsersService implements IUserService {
     const password = await hasPassword(input.password);
     const user = this.userRep.create({ ...input, password });
     return this.userRep.save(user);
+  }
+
+  findUser(input: FindUserType) {
+    return this.userRep.findOneBy(input);
   }
 }

@@ -1,3 +1,5 @@
+import { ValidateUserType } from '../utils/types';
+
 export interface IAuthService {
-  validateUser();
+  validateUser(input: ValidateUserType);
 }

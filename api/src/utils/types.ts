@@ -7,3 +7,12 @@ export type CreateUserType = {
 
   password: string;
 };
+
+export type ValidateUserType = {
+  email: string;
+  password: string;
+};
+
+export type FindUserType = Partial<
+  Omit<CreateUserType, 'password'> & { id: number }
+>;

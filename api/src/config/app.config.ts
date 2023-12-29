@@ -11,4 +11,7 @@ export const configuration = () => ({
     secret: process.env.JWT_SECRET,
     expiresIn: process.env.JWT_EXPIRE_IN,
   },
+  cookie: {
+    secret: process.env.COOKIE_SECRET,
+  },
 });
