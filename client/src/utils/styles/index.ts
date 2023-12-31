@@ -112,7 +112,9 @@ export const ConversationPanelStyle = styled.div`
   margin-left: ${SIDEBAR_WITH}px;
   border-left: 1px solid #545454;
 `;
-export const ConversationItemsWrapper = styled.div``;
+export const ConversationItemsWrapper = styled.div`
+  margin-top: 80px;
+`;
 
 export const ConversationItem = styled.div`
   display: flex;
