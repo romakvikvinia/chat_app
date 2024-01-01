@@ -16,3 +16,9 @@ export type ValidateUserType = {
 export type FindUserType = Partial<
   Omit<CreateUserType, 'password'> & { id: number }
 >;
+
+export type CreateConversationParams = {
+  authorId: number;
+  recipientId: number;
+  message: string;
+};
