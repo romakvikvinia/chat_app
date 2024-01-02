@@ -1,5 +1,6 @@
+import { User } from '../utils/typeorm';
 import { CreateConversationParams } from '../utils/types';
 
 export interface IConversationsService {
-  create(input: CreateConversationParams);
+  create(user: User, input: CreateConversationParams);
 }

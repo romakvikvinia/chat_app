@@ -22,6 +22,9 @@ export class UsersService implements IUserService {
   }
 
   findUser(input: FindUserType) {
-    return this.userRep.findOneBy(input);
+    return this.userRep.findOne({ where: input, relations: ['participant'] });
+  }
+  saveUser(user: User) {
+    return this.userRep.save(user);
   }
 }

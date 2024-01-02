@@ -22,3 +22,11 @@ export type CreateConversationParams = {
   recipientId: number;
   message: string;
 };
+
+export type FindParticipantParam = Partial<{
+  id: number;
+}>;
+
+export type CreateParticipantParam = {
+  id: number;
+};

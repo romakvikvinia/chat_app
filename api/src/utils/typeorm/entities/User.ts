@@ -2,10 +2,13 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { Exclude } from 'class-transformer';
+import { Participant } from './participants.entity';
 
 @Entity({ name: 'users' })
 export class User {
@@ -37,4 +40,11 @@ export class User {
     onUpdate: 'CURRENT_TIMESTAMP(6)',
   })
   updated_at: Date;
+
+  /**
+   * Relationships
+   * */
+  @OneToOne(() => Participant)
+  @JoinColumn()
+  participant: Participant;
 }

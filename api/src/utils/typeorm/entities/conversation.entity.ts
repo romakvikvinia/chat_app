@@ -1,24 +1,19 @@
 import {
-  Column,
   CreateDateColumn,
   Entity,
+  ManyToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { Participant } from './participants.entity';
 
 @Entity({ name: 'conversations' })
 export class Conversation {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
-  authorId: number;
-
-  @Column()
-  recipientId: number;
-
-  @Column()
-  message: string;
+  @ManyToMany(() => Participant, (participant) => participant.conversations)
+  participants: Participant[];
 
   @CreateDateColumn({
     type: 'timestamp',

@@ -1,13 +1,54 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { UpdateConversationDto } from './dto/update-conversation.dto';
 import { IConversationsService } from './conversations';
-import { CreateConversationParams } from 'src/utils/types';
+import { CreateConversationParams } from '../utils/types';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Conversation, Participant, User } from '../utils/typeorm';
+import { Repository } from 'typeorm';
+import { Services } from '../utils/constants';
+import { IParticipantsService } from '../participant/participant';
+import { IUserService } from '../users/user';
 
 @Injectable()
 export class ConversationsService implements IConversationsService {
-  create(createConversationDto: CreateConversationParams) {
-    console.log(createConversationDto);
-    return 'This action adds a new conversation';
+  constructor(
+    @InjectRepository(Conversation)
+    private readonly conversationRepository: Repository<Conversation>,
+    @Inject(Services.PARTICIPANTS)
+    private readonly participantService: IParticipantsService,
+    @Inject(Services.USERS)
+    private readonly userService: IUserService,
+  ) {}
+  async create(user: User, input: CreateConversationParams) {
+    const userDB = await this.userService.findUser({ id: user.id });
+    const participants: Participant[] = [];
+
+    if (!userDB.participant) {
+      participants.push(
+        await this.createParticipantAndSaveUser(userDB, input.authorId),
+      );
+    } else {
+      participants.push(userDB.participant);
+    }
+
+    const recipient = await this.userService.findUser({
+      id: input.recipientId,
+    });
+
+    if (!recipient)
+      throw new BadRequestException(`Can not create conversation `);
+
+    if (!recipient.participant) {
+      participants.push(
+        await this.createParticipantAndSaveUser(recipient, input.recipientId),
+      );
+    } else {
+      participants.push(recipient.participant);
+    }
+
+    const conversation = this.conversationRepository.create({ participants });
+
+    return this.conversationRepository.save(conversation);
   }
 
   findAll() {
@@ -25,5 +66,12 @@ export class ConversationsService implements IConversationsService {
 
   remove(id: number) {
     return `This action removes a #${id} conversation`;
+  }
+
+  private async createParticipantAndSaveUser(user: User, id: number) {
+    const participant = await this.participantService.createParticipant({ id });
+    user.participant = participant;
+    await this.userService.saveUser(user);
+    return participant;
   }
 }

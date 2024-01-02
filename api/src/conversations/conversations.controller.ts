@@ -15,7 +15,11 @@ import { UpdateConversationDto } from './dto/update-conversation.dto';
 import { Routes, Services } from '../utils/constants';
 import { AuthenticatedGuard } from '../auth/guards/session.guard';
 import { IConversationsService } from './conversations';
+import { GetUser } from '../auth/decorators/user.decorator';
+import { User } from '../utils/typeorm';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Conversations')
 @Controller(Routes.CONVERSATIONS)
 @UseGuards(AuthenticatedGuard)
 export class ConversationsController {
@@ -25,8 +29,11 @@ export class ConversationsController {
   ) {}
 
   @Post()
-  create(@Body() createConversationDto: CreateConversationDto) {
-    return this.conversationsService.create(createConversationDto);
+  async create(
+    @GetUser() user: User,
+    @Body() createConversationDto: CreateConversationDto,
+  ) {
+    return this.conversationsService.create(user, createConversationDto);
   }
 
   @Get()
