@@ -5,4 +5,5 @@ export interface IParticipantsService {
   findParticipant(input: FindParticipantParam): Promise<Participant | null>;
   // findOrCreateParticipant();
   createParticipant(input: CreateParticipantParam): Promise<Participant>;
+  findParticipantConversations(id: number);
 }

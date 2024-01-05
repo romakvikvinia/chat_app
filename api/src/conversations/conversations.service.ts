@@ -51,6 +51,21 @@ export class ConversationsService implements IConversationsService {
     return this.conversationRepository.save(conversation);
   }
 
+  find(id: number) {
+    // return this.conversationRepository
+    //   .createQueryBuilder('conversations')
+    //   .leftJoinAndSelect('conversations.participants', 'participants')
+    //   .getMany();
+    return this.participantService.findParticipantConversations(id);
+  }
+
+  findConversationById(id: number) {
+    return this.conversationRepository.findOne({
+      where: { id },
+      relations: ['participants', 'participants.user'],
+    });
+  }
+
   findAll() {
     return `This action returns all conversations`;
   }

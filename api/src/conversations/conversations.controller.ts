@@ -37,13 +37,13 @@ export class ConversationsController {
   }
 
   @Get()
-  findAll() {
-    // return this.conversationsService.findAll();
+  findAll(@GetUser() user: User) {
+    return this.conversationsService.find(user.id);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    // return this.conversationsService.findOne(+id);
+  findOne(@Param('id') id: number) {
+    return this.conversationsService.findConversationById(id);
   }
 
   @Patch(':id')
