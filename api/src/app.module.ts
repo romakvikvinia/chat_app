@@ -7,7 +7,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import entities from './utils/typeorm';
 import { PassportModule } from '@nestjs/passport';
 import { ConversationsModule } from './conversations/conversations.module';
-import { ParticipantModule } from './participant/participant.module';
+import { MessageModule } from './message/message.module';
 
 @Module({
   imports: [
@@ -34,7 +34,7 @@ import { ParticipantModule } from './participant/participant.module';
     AuthModule,
     UsersModule,
     ConversationsModule,
-    ParticipantModule,
+    MessageModule,
   ],
   controllers: [],
   providers: [],

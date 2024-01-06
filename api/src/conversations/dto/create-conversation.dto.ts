@@ -5,11 +5,6 @@ export class CreateConversationDto {
   @ApiProperty()
   @IsNumber()
   @IsNotEmpty()
-  authorId: number;
-
-  @ApiProperty()
-  @IsNumber()
-  @IsNotEmpty()
   recipientId: number;
 
   @ApiProperty()

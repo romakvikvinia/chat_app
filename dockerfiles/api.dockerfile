@@ -1,7 +1,7 @@
 ###################
 # Development stage
 ###################
-FROM node:20.10.0-alpine as development
+FROM node:20.10-alpine3.19 as development
 
 WORKDIR /app
 
@@ -18,7 +18,7 @@ USER node
 # BUILD FOR PRODUCTION
 ###################
 
-FROM node:20.10.0-alpine As build
+FROM node:20.10-alpine3.19 As build
 
 WORKDIR /app
 
@@ -50,7 +50,7 @@ USER node
 # PRODUCTION
 ###################
 
-FROM node:20.10.0-alpine As production
+FROM node:20.10-alpine3.19 As production
 
 WORKDIR /app
 # Copy the bundled code from the build stage to the production image

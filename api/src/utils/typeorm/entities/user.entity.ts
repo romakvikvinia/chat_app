@@ -3,12 +3,13 @@ import {
   CreateDateColumn,
   Entity,
   JoinColumn,
-  OneToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { Exclude } from 'class-transformer';
-import { Participant } from './participants.entity';
+
+import { Message } from './message.entity';
 
 @Entity({ name: 'users' })
 export class User {
@@ -41,10 +42,7 @@ export class User {
   })
   updated_at: Date;
 
-  /**
-   * Relationships
-   * */
-  @OneToOne(() => Participant)
+  @OneToMany(() => Message, (message) => message.author)
   @JoinColumn()
-  participant: Participant;
+  messages: Message[];
 }

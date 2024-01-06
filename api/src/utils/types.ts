@@ -18,7 +18,6 @@ export type FindUserType = Partial<
 >;
 
 export type CreateConversationParams = {
-  authorId: number;
   recipientId: number;
   message: string;
 };

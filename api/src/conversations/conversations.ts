@@ -3,6 +3,7 @@ import { CreateConversationParams } from '../utils/types';
 
 export interface IConversationsService {
   create(user: User, input: CreateConversationParams);
-  find(id: number): Promise<Conversation[]>;
+  // find(id: number): Promise<any>;
   findConversationById(id: number);
+  getConversations(id: number): Promise<Conversation[]>;
 }

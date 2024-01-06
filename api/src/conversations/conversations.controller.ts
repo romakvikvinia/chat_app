@@ -38,7 +38,7 @@ export class ConversationsController {
 
   @Get()
   findAll(@GetUser() user: User) {
-    return this.conversationsService.find(user.id);
+    return this.conversationsService.getConversations(user.id);
   }
 
   @Get(':id')

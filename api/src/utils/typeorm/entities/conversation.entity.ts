@@ -1,19 +1,33 @@
 import {
   CreateDateColumn,
   Entity,
-  ManyToMany,
+  JoinColumn,
+  OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { Participant } from './participants.entity';
+import { User } from './user.entity';
+import { Message } from './message.entity';
 
 @Entity({ name: 'conversations' })
 export class Conversation {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToMany(() => Participant, (participant) => participant.conversations)
-  participants: Participant[];
+  @OneToOne(() => User, { createForeignKeyConstraints: false })
+  @JoinColumn()
+  creator: User;
+
+  @OneToOne(() => User, { createForeignKeyConstraints: false })
+  @JoinColumn()
+  recipient: User;
+
+  @OneToMany(() => Message, (message) => message.conversation, {
+    cascade: ['insert', 'remove', 'update'],
+  })
+  @JoinColumn()
+  messages: Message[];
 
   @CreateDateColumn({
     type: 'timestamp',

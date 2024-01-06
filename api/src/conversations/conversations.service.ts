@@ -1,12 +1,17 @@
-import { BadRequestException, Inject, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { UpdateConversationDto } from './dto/update-conversation.dto';
 import { IConversationsService } from './conversations';
 import { CreateConversationParams } from '../utils/types';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Conversation, Participant, User } from '../utils/typeorm';
+import { Conversation, Message, User } from '../utils/typeorm';
 import { Repository } from 'typeorm';
 import { Services } from '../utils/constants';
-import { IParticipantsService } from '../participant/participant';
+
 import { IUserService } from '../users/user';
 
 @Injectable()
@@ -14,50 +19,66 @@ export class ConversationsService implements IConversationsService {
   constructor(
     @InjectRepository(Conversation)
     private readonly conversationRepository: Repository<Conversation>,
-    @Inject(Services.PARTICIPANTS)
-    private readonly participantService: IParticipantsService,
+
     @Inject(Services.USERS)
     private readonly userService: IUserService,
+
+    @InjectRepository(Message)
+    private readonly messageRepository: Repository<Message>,
   ) {}
-  async create(user: User, input: CreateConversationParams) {
-    const userDB = await this.userService.findUser({ id: user.id });
-    const participants: Participant[] = [];
 
-    if (!userDB.participant) {
-      participants.push(
-        await this.createParticipantAndSaveUser(userDB, input.authorId),
-      );
-    } else {
-      participants.push(userDB.participant);
-    }
+  async create(
+    creator: User,
+    { recipientId, message: content }: CreateConversationParams,
+  ) {
+    // const { username, message: content } = input;
+    const recipient = await this.userService.findUser({ id: recipientId });
+    if (!recipient) throw new NotFoundException('Can not found recipient');
+    if (creator.id === recipient.id)
+      throw new BadRequestException('Cannot create Conversation with yourself');
+    // const isFriends = await this.friendsService.isFriends(
+    //   creator.id,
+    //   recipient.id,
+    // );
+    // if (!isFriends) throw new FriendNotFoundException();
+    const exists = await this.isCreated(creator.id, recipient.id);
 
-    const recipient = await this.userService.findUser({
-      id: input.recipientId,
+    if (exists) throw new BadRequestException('Conversation already exists');
+
+    const newConversation = this.conversationRepository.create({
+      creator,
+      recipient,
     });
-
-    if (!recipient)
-      throw new BadRequestException(`Can not create conversation `);
-
-    if (!recipient.participant) {
-      participants.push(
-        await this.createParticipantAndSaveUser(recipient, input.recipientId),
-      );
-    } else {
-      participants.push(recipient.participant);
-    }
-
-    const conversation = this.conversationRepository.create({ participants });
-
-    return this.conversationRepository.save(conversation);
+    const conversation =
+      await this.conversationRepository.save(newConversation);
+    const newMessage = this.messageRepository.create({
+      content,
+      conversation,
+      author: creator,
+    });
+    await this.messageRepository.save(newMessage);
+    return conversation;
   }
 
-  find(id: number) {
-    // return this.conversationRepository
-    //   .createQueryBuilder('conversations')
-    //   .leftJoinAndSelect('conversations.participants', 'participants')
-    //   .getMany();
-    return this.participantService.findParticipantConversations(id);
+  async getConversations(id: number): Promise<Conversation[]> {
+    return (
+      this.conversationRepository
+        .createQueryBuilder('conversation')
+        // .leftJoinAndSelect('conversation.lastMessageSent', 'lastMessageSent')
+        .leftJoinAndSelect('conversation.creator', 'creator')
+        .leftJoinAndSelect('conversation.recipient', 'recipient')
+        // .leftJoinAndSelect('creator.peer', 'creatorPeer')
+        // .leftJoinAndSelect('recipient.peer', 'recipientPeer')
+        // .leftJoinAndSelect('creator.profile', 'creatorProfile')
+        // .leftJoinAndSelect('recipient.profile', 'recipientProfile')
+        .where('creator.id = :id', { id })
+        .orWhere('recipient.id = :id', { id })
+        // .orderBy('conversation.lastMessageSentAt', 'DESC')
+        .getMany()
+    );
   }
+
+  // find() {}
 
   findConversationById(id: number) {
     return this.conversationRepository.findOne({
@@ -83,10 +104,12 @@ export class ConversationsService implements IConversationsService {
     return `This action removes a #${id} conversation`;
   }
 
-  private async createParticipantAndSaveUser(user: User, id: number) {
-    const participant = await this.participantService.createParticipant({ id });
-    user.participant = participant;
-    await this.userService.saveUser(user);
-    return participant;
+  private async isCreated(creatorId: number, recipientId: number) {
+    return this.conversationRepository.findOne({
+      where: [
+        { creator: { id: creatorId } },
+        { recipient: { id: recipientId } },
+      ],
+    });
   }
 }
