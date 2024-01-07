@@ -19,4 +19,13 @@ export type SignInInput = Pick<SignUpInput, "email" | "password">;
 
 export type SignInResponseType = UserType;
 
-export type GetMeResponseType = {};
+export type GetMeResponseType = UserType;
+
+export type ConversationType = {
+  id: number;
+  creator: UserType;
+  recipient: UserType;
+  messages: [];
+};
+
+export type ConversationsResponseType = ConversationType[];

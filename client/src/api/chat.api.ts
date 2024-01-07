@@ -1,5 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import {
+  ConversationsResponseType,
   GetMeResponseType,
   SignInInput,
   SignInResponseType,
@@ -15,7 +16,7 @@ export const chatAppApi = createApi({
     baseUrl: "http://localhost:8080/api",
     credentials: "include",
   }),
-  tagTypes: ["SignUp", "SignIn", "GetMe"],
+  tagTypes: ["SignUp", "SignIn", "GetMe", "conversations"],
   endpoints: (builder) => ({
     signUp: builder.mutation<SignUpResponseType, SignUpInput>({
       query: ({ email, firstName, lastName, password }) => ({
@@ -57,8 +58,22 @@ export const chatAppApi = createApi({
       },
       providesTags: ["GetMe"],
     }),
+
+    /**
+     * Conversations
+     */
+    conversations: builder.query<ConversationsResponseType, void>({
+      query: () => ({
+        url: `/conversations`,
+      }),
+      providesTags: ["conversations"],
+    }),
   }),
 });
 
-export const { useSignUpMutation, useSignInMutation, useGetMeQuery } =
-  chatAppApi;
+export const {
+  useSignUpMutation,
+  useSignInMutation,
+  useGetMeQuery,
+  useConversationsQuery,
+} = chatAppApi;

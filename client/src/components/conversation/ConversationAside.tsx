@@ -7,11 +7,12 @@ import {
   ConversationItem,
   ConversationSideBarHeader,
 } from "../../utils/styles";
-import { ConversationType } from "../../utils/types";
 
 // css
 import styles from "./index.module.scss";
 import { CreateConversationModal } from "./modals/CreateConversationModal";
+import { ConversationType } from "../../api/types";
+import { useGetMeQuery } from "../../api/chat.api";
 
 type ConversationAsideProps = {
   conversations: ConversationType[];
@@ -21,6 +22,7 @@ export const ConversationAside: React.FC<ConversationAsideProps> = ({
   conversations,
 }) => {
   const navigation = useNavigate();
+  const { data } = useGetMeQuery();
   const [state, setState] = useState({ isOpen: false });
 
   const handleOpenModal = useCallback(() => {
@@ -29,6 +31,12 @@ export const ConversationAside: React.FC<ConversationAsideProps> = ({
   const handleCloseModal = useCallback(() => {
     setState((prevState) => ({ ...prevState, isOpen: false }));
   }, []);
+
+  const getDisplayUser = (conversation: ConversationType) =>
+    data && data.id === conversation.creator.id
+      ? conversation.recipient
+      : conversation.creator;
+
   return (
     <>
       {state.isOpen && <CreateConversationModal close={handleCloseModal} />}
@@ -49,10 +57,12 @@ export const ConversationAside: React.FC<ConversationAsideProps> = ({
               <div className={styles.conversationAvatar}></div>
               <div>
                 <span className={styles.conversationName}>
-                  {conversation.name}
+                  {`${getDisplayUser(conversation).firstName} ${
+                    getDisplayUser(conversation).lastName
+                  }`}
                 </span>
                 <span className={styles.conversationLastMessage}>
-                  {conversation.lastMessage}
+                  simple Text
                 </span>
               </div>
             </ConversationItem>
