@@ -78,7 +78,7 @@ export class ConversationsService implements IConversationsService {
     );
   }
 
-  // find() {}
+  find() {}
 
   findConversationById(id: number) {
     return this.conversationRepository.findOne({
