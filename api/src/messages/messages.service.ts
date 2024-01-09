@@ -37,7 +37,23 @@ export class MessagesService implements IMessageService {
       author: user,
     });
 
-    return await this.messageRepository.save(message);
+    const savedMessage = await this.messageRepository.save(message);
+    conversation.lastMessageSent = savedMessage;
+    await this.conversationRepository.save(conversation);
+
+    return;
+  }
+  getMessagesByConversationId(conversationId: number) {
+    return this.messageRepository.find({
+      where: { conversation: { id: conversationId } },
+      relations: ['author'],
+      order: {
+        createdAt: 'DESC',
+      },
+
+      // skip: 0,
+      // take: 10,
+    });
   }
 
   findAll() {
@@ -49,6 +65,7 @@ export class MessagesService implements IMessageService {
   }
 
   update(id: number, updateMessageDto: UpdateMessageDto) {
+    console.log(updateMessageDto);
     return `This action updates a #${id} message`;
   }
 

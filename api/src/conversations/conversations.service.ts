@@ -83,7 +83,7 @@ export class ConversationsService implements IConversationsService {
   findConversationById(id: number) {
     return this.conversationRepository.findOne({
       where: { id },
-      relations: ['participants', 'participants.user'],
+      relations: ['creator', 'recipient', 'messages', 'messages.author'],
     });
   }
 

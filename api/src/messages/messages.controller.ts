@@ -34,9 +34,15 @@ export class MessagesController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    // return this.messagesService.findOne(+id);
+  getMessagesFromConversations(@GetUser() user: User, @Param('id') id: number) {
+    return this.messagesService.getMessagesByConversationId(id);
   }
+  // @Get(':conversationId')
+  // getMessagesFromConversations(
+  //   @Param('conversationId') conversationId: number,
+  // ) {
+  //   // return this.messagesService.findOne(id);
+  // }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateMessageDto: UpdateMessageDto) {
