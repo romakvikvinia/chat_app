@@ -1,6 +1,7 @@
 import {
   CreateDateColumn,
   Entity,
+  Index,
   JoinColumn,
   OneToMany,
   OneToOne,
@@ -11,6 +12,7 @@ import { User } from './user.entity';
 import { Message } from './message.entity';
 
 @Entity({ name: 'conversations' })
+@Index(['creator.id', 'recipient.id'], { unique: true })
 export class Conversation {
   @PrimaryGeneratedColumn()
   id: number;
@@ -23,22 +25,32 @@ export class Conversation {
   @JoinColumn()
   recipient: User;
 
+  @CreateDateColumn({
+    name: 'created_at',
+    type: 'timestamp',
+    default: () => 'CURRENT_TIMESTAMP(6)',
+  })
+  createdAt: Date;
+
+  @UpdateDateColumn({
+    name: 'updated_at',
+    type: 'timestamp',
+    default: () => 'CURRENT_TIMESTAMP(6)',
+    onUpdate: 'CURRENT_TIMESTAMP(6)',
+  })
+  updatedAt: Date;
+
+  /**
+   * relationship
+   */
+
   @OneToMany(() => Message, (message) => message.conversation, {
     cascade: ['insert', 'remove', 'update'],
   })
   @JoinColumn()
   messages: Message[];
 
-  @CreateDateColumn({
-    type: 'timestamp',
-    default: () => 'CURRENT_TIMESTAMP(6)',
-  })
-  created_at: Date;
-
-  @UpdateDateColumn({
-    type: 'timestamp',
-    default: () => 'CURRENT_TIMESTAMP(6)',
-    onUpdate: 'CURRENT_TIMESTAMP(6)',
-  })
-  updated_at: Date;
+  @OneToOne(() => Message)
+  @JoinColumn({ name: 'last_message_sent' })
+  lastMessageSent: Message;
 }

@@ -26,7 +26,7 @@ export class User {
   lastName: string;
 
   @Column()
-  @Exclude()
+  @Exclude({ toPlainOnly: true })
   password: string;
 
   @CreateDateColumn({

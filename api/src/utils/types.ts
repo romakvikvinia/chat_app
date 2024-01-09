@@ -1,3 +1,5 @@
+import { User } from './typeorm';
+
 export type CreateUserType = {
   email: string;
 
@@ -28,4 +30,10 @@ export type FindParticipantParam = Partial<{
 
 export type CreateParticipantParam = {
   id: number;
+};
+
+export type CreateMessageParams = {
+  content: string;
+  conversationId: number;
+  user: User;
 };
