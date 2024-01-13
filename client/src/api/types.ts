@@ -29,3 +29,24 @@ export type ConversationType = {
 };
 
 export type ConversationsResponseType = ConversationType[];
+
+export type ConversationMessagesQueryArgs = {
+  id: number;
+};
+
+export type AuthorType = {
+  id: number;
+  firstName: string;
+  lastName: string;
+  email: string;
+  created_at: string;
+  updated_at: string;
+};
+
+export type MessageType = {
+  id: number;
+  content: string;
+  author: AuthorType;
+  createdAt: string;
+};
+export type ConversationMessagesResponseType = MessageType[];
