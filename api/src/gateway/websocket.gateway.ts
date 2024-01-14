@@ -6,7 +6,7 @@ import {
   WebSocketGateway,
   WebSocketServer,
 } from '@nestjs/websockets';
-import { Server } from 'socket.io';
+import { Server, Socket } from 'socket.io';
 
 @WebSocketGateway({
   cors: {
@@ -17,7 +17,7 @@ export class MessageGateway implements OnGatewayConnection {
   @WebSocketServer()
   server: Server;
   constructor() {}
-  handleConnection(client: any, ...args: any[]) {
+  handleConnection(client: Socket, ...args: any[]) {
     console.log(client);
     console.log(args);
   }

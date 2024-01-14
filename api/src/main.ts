@@ -34,6 +34,7 @@ async function bootstrap() {
   );
 
   app.use(passport.initialize());
+
   app.use(passport.session());
 
   const swConfig = new DocumentBuilder()
