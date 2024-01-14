@@ -13,10 +13,29 @@ export const MessageContainer: React.FC<Props> = ({ messages }) => {
     <MessageContainerStyle>
       {messages.map((message, index, arr) => {
         if (arr.length - 1 === index)
-          return <MessageItem message={message} showAuthor />;
+          return (
+            <MessageItem
+              message={message}
+              showAuthor
+              key={`MessageItem-${message.id}`}
+            />
+          );
         if (message.author.id === arr[index + 1].author.id)
-          return <MessageItem message={message} showAuthor={false} />;
-        else return <MessageItem message={message} showAuthor />;
+          return (
+            <MessageItem
+              message={message}
+              showAuthor={false}
+              key={`MessageItem-${message.id}`}
+            />
+          );
+        else
+          return (
+            <MessageItem
+              message={message}
+              showAuthor
+              key={`MessageItem-${message.id}`}
+            />
+          );
       })}
     </MessageContainerStyle>
   );

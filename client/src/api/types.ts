@@ -25,7 +25,8 @@ export type ConversationType = {
   id: number;
   creator: UserType;
   recipient: UserType;
-  messages: [];
+  createdAt: Date;
+  updatedAt: Date;
 };
 
 export type ConversationsResponseType = ConversationType[];
@@ -39,14 +40,22 @@ export type AuthorType = {
   firstName: string;
   lastName: string;
   email: string;
-  created_at: string;
-  updated_at: string;
+  created_at: Date;
+  updated_at: Date;
 };
 
 export type MessageType = {
   id: number;
   content: string;
   author: AuthorType;
-  createdAt: string;
+  createdAt: Date;
 };
 export type ConversationMessagesResponseType = MessageType[];
+
+export type MessageEventPayload = {
+  id: number;
+  content: string;
+  author: AuthorType;
+  conversation: ConversationType;
+  createdAt: Date;
+};

@@ -182,7 +182,7 @@ export const MessagePanelBodyStyle = styled.div`
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
-  padding: 20px;
+  padding: 0 20px 20px 20px;
 `;
 
 export const MessageContainerStyle = styled.div`
@@ -243,7 +243,9 @@ export const MessageItemHeader = styled.div`
   }
 `;
 
-export const MessageItemDetails = styled.div``;
+export const MessageItemDetails = styled.div`
+  flex-grow: 1;
+`;
 
 export const MessageItemContent = styled.div<MessageItemContainerProps>`
   padding: ${(props) => props.padding};
@@ -256,7 +258,7 @@ export const MessagePanelHeaderStyle = styled.header`
   box-sizing: border-box;
   background-color: #151515;
   height: 80px;
-  font-wight: bold;
+  font-weight: bold;
   display: flex;
   justify-content: space-between;
   padding: 0 24px;

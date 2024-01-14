@@ -33,7 +33,7 @@ export const MessageItem: React.FC<MessageItemProps> = ({
           </MessageItemHeader>
         )}
 
-        <MessageItemContent padding={!showAuthor ? "0 0 0 70px" : ""}>
+        <MessageItemContent padding={!showAuthor ? "0 0 0 70px" : "0"}>
           {message.content}
         </MessageItemContent>
       </MessageItemDetails>
