@@ -18,7 +18,7 @@ export const InputField = styled.input`
   box-sizing: border-box;
   width: 100%;
   padding: 0;
-  margin: 4px; 0;
+  margin: 4px 0;
 `;
 
 export const InputContainer = styled.div<InputContainerProps>`
@@ -34,7 +34,7 @@ export const InputLabel = styled.label`
   display: block;
   color: #8f8f8f;
   font-size: 14px;
-  margin: 4px; 0;
+  margin: 4px 0;
 `;
 
 export const Button = styled.button`
@@ -168,7 +168,7 @@ export const TextField = styled.textarea`
   box-sizing: border-box;
   width: 100%;
   padding: 0;
-  margin: 4px; 0;
+  margin: 4px 0;
   resize: none;
 `;
 

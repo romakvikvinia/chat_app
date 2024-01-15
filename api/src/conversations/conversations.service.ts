@@ -42,7 +42,7 @@ export class ConversationsService implements IConversationsService {
     // );
     // if (!isFriends) throw new FriendNotFoundException();
     const exists = await this.isCreated(creator.id, recipient.id);
-
+    console.log(exists);
     if (exists) throw new BadRequestException('Conversation already exists');
 
     const newConversation = this.conversationRepository.create({
@@ -104,12 +104,17 @@ export class ConversationsService implements IConversationsService {
     return `This action removes a #${id} conversation`;
   }
 
-  private async isCreated(creatorId: number, recipientId: number) {
+  private isCreated(creatorId: number, recipientId: number) {
+    console.log(creatorId, recipientId);
     return this.conversationRepository.findOne({
-      where: [
-        { creator: { id: creatorId } },
-        { recipient: { id: recipientId } },
-      ],
+      where: {
+        creator: { id: creatorId },
+        recipient: { id: recipientId },
+      },
+      // where: [
+      //   { creator: { id: creatorId } },
+      //   { recipient: { id: recipientId } },
+      // ],
     });
   }
 }

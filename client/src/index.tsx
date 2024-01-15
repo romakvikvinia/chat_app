@@ -8,19 +8,23 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { chatAppApi } from "./api/chat.api";
 import { SocketContext, socket } from "./utils/context/socket.context";
+import { Provider } from "react-redux";
+import { store } from "./package/store";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
 root.render(
   <React.StrictMode>
-    <ApiProvider api={chatAppApi}>
+    <Provider store={store}>
+      {/* <ApiProvider api={chatAppApi}> */}
       <SocketContext.Provider value={socket}>
         <BrowserRouter>
           <App />
         </BrowserRouter>
       </SocketContext.Provider>
-    </ApiProvider>
+      {/* </ApiProvider> */}
+    </Provider>
   </React.StrictMode>
 );
 

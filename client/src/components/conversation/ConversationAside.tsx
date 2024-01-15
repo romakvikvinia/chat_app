@@ -12,17 +12,14 @@ import {
 import styles from "./index.module.scss";
 import { CreateConversationModal } from "./modals/CreateConversationModal";
 import { ConversationType } from "../../api/types";
-import { useGetMeQuery } from "../../api/chat.api";
+import { useGetMeQuery, useConversationsQuery } from "../../api/chat.api";
 
-type ConversationAsideProps = {
-  conversations: ConversationType[];
-};
+type ConversationAsideProps = {};
 
-export const ConversationAside: React.FC<ConversationAsideProps> = ({
-  conversations,
-}) => {
+export const ConversationAside: React.FC<ConversationAsideProps> = ({}) => {
   const navigation = useNavigate();
   const { data } = useGetMeQuery();
+  const { data: conversations, isLoading } = useConversationsQuery();
   const [state, setState] = useState({ isOpen: false });
 
   const handleOpenModal = useCallback(() => {
@@ -49,24 +46,29 @@ export const ConversationAside: React.FC<ConversationAsideProps> = ({
           </div>
         </ConversationSideBarHeader>
         <ConversationItemsWrapper>
-          {conversations.map((conversation) => (
-            <ConversationItem
-              key={`conversation-${conversation.id}`}
-              onClick={() => navigation(`/conversations/${conversation.id}`)}
-            >
-              <div className={styles.conversationAvatar}></div>
-              <div>
-                <span className={styles.conversationName}>
-                  {`${getDisplayUser(conversation).firstName} ${
-                    getDisplayUser(conversation).lastName
-                  }`}
-                </span>
-                <span className={styles.conversationLastMessage}>
-                  simple Text
-                </span>
-              </div>
-            </ConversationItem>
-          ))}
+          {conversations &&
+            Array.from(conversations, ([_, conversation]) => conversation).map(
+              (conversation) => (
+                <ConversationItem
+                  key={`conversation-${conversation.id}`}
+                  onClick={() =>
+                    navigation(`/conversations/${conversation.id}`)
+                  }
+                >
+                  <div className={styles.conversationAvatar}></div>
+                  <div>
+                    <span className={styles.conversationName}>
+                      {`${getDisplayUser(conversation).firstName} ${
+                        getDisplayUser(conversation).lastName
+                      }`}
+                    </span>
+                    <span className={styles.conversationLastMessage}>
+                      simple Text
+                    </span>
+                  </div>
+                </ConversationItem>
+              )
+            )}
         </ConversationItemsWrapper>
       </ConversationSideBarStyle>
     </>

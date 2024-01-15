@@ -1,3 +1,4 @@
+import { Map } from "immutable";
 export type UserType = {
   id: number;
   email: string;
@@ -29,7 +30,7 @@ export type ConversationType = {
   updatedAt: Date;
 };
 
-export type ConversationsResponseType = ConversationType[];
+export type ConversationsResponseType = Map<number, ConversationType>;
 
 export type ConversationMessagesQueryArgs = {
   id: number;
@@ -59,3 +60,10 @@ export type MessageEventPayload = {
   conversation: ConversationType;
   createdAt: Date;
 };
+
+export type CreateMessageArgs = {
+  conversationId: number;
+  content: string;
+};
+
+export type CreateMessageResponseType = {};

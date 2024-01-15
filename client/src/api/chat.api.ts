@@ -1,8 +1,13 @@
+import { Map } from "immutable";
+
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import {
   ConversationMessagesQueryArgs,
   ConversationMessagesResponseType,
+  ConversationType,
   ConversationsResponseType,
+  CreateMessageArgs,
+  CreateMessageResponseType,
   GetMeResponseType,
   SignInInput,
   SignInResponseType,
@@ -74,6 +79,14 @@ export const chatAppApi = createApi({
       query: () => ({
         url: `/conversations`,
       }),
+      transformResponse: (response: ConversationsResponseType) => {
+        let map = Map<number, ConversationType>();
+
+        response.forEach((conversation) => {
+          map = map.set(conversation.id, conversation);
+        });
+        return map;
+      },
       providesTags: ["Conversations"],
     }),
 
@@ -89,6 +102,20 @@ export const chatAppApi = createApi({
       }),
       providesTags: ["Conversation_messages"],
     }),
+
+    /**
+     * create Message
+     */
+    createMessage: builder.mutation<
+      CreateMessageResponseType,
+      CreateMessageArgs
+    >({
+      query: ({ conversationId, content }) => ({
+        url: `/messages`,
+        body: { conversationId, content },
+        method: "POST",
+      }),
+    }),
   }),
 });
 
@@ -98,4 +125,5 @@ export const {
   useGetMeQuery,
   useConversationsQuery,
   useLazyConversationMessagesQuery,
+  useCreateMessageMutation,
 } = chatAppApi;
