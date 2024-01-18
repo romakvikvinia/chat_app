@@ -7,7 +7,7 @@ import {
 import { useParams } from "react-router-dom";
 import { MessagePanel } from "../../components/conversation/messages/MessagePanel";
 import { SocketContext } from "../../utils/context/socket.context";
-import { MessageEventPayload } from "../../api/types";
+import { ConversationMapType, MessageEventPayload } from "../../api/types";
 import { useDispatch } from "react-redux";
 import { ThunkDispatch, UnknownAction } from "@reduxjs/toolkit";
 
@@ -36,6 +36,22 @@ export const ConversationChanelPage = () => {
           { id: conversation.id },
           (draftMessages: any) => {
             draftMessages.unshift(message);
+          }
+        )
+      );
+      dispatch(
+        chatAppApi.util.updateQueryData(
+          "conversations",
+          undefined,
+          (conversations: any) => {
+            console.log("conversations", conversations);
+            // draftMessages.unshift(message);
+            const currentConversation = conversations.get(conversation.id);
+            if (!currentConversation) return;
+
+            currentConversation.lastMessageSent = message;
+            conversations.set(conversation.id, currentConversation);
+            return conversations;
           }
         )
       );

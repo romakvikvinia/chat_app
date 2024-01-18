@@ -63,7 +63,7 @@ export const ConversationAside: React.FC<ConversationAsideProps> = ({}) => {
                       }`}
                     </span>
                     <span className={styles.conversationLastMessage}>
-                      simple Text
+                      {conversation.lastMessageSent?.content}
                     </span>
                   </div>
                 </ConversationItem>

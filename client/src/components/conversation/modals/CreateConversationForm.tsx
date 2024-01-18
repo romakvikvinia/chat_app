@@ -30,34 +30,34 @@ export const CreateConversationForm = () => {
         </InputContainer>
       </section>
       <Button
-        onClick={() => {
-          dispatch(
-            addConversation({
-              id: 1,
-              createdAt: new Date(),
-              updatedAt: new Date(),
-              creator: {
-                id: 2,
-                email: "romakvikvinia@gmail.com",
-                firstName: "Roma",
-                lastName: "KV",
+      // onClick={() => {
+      //   dispatch(
+      //     addConversation({
+      //       id: 1,
+      //       createdAt: new Date(),
+      //       updatedAt: new Date(),
+      //       creator: {
+      //         id: 2,
+      //         email: "romakvikvinia@gmail.com",
+      //         firstName: "Roma",
+      //         lastName: "KV",
 
-                created_at: "2024-01-14T12:36:12.994Z",
-                updated_at: "2024-01-14T12:36:46.835Z",
-              },
-              recipient: {
-                id: 1,
-                email: "nano@gmail.com",
-                firstName: "Nano",
-                lastName: "Kv",
+      //         created_at: "2024-01-14T12:36:12.994Z",
+      //         updated_at: "2024-01-14T12:36:46.835Z",
+      //       },
+      //       recipient: {
+      //         id: 1,
+      //         email: "nano@gmail.com",
+      //         firstName: "Nano",
+      //         lastName: "Kv",
 
-                created_at: "2024-01-14T12:35:49.992Z",
-                updated_at: "2024-01-14T12:36:02.843Z",
-              },
-              // messages: [],
-            })
-          );
-        }}
+      //         created_at: "2024-01-14T12:35:49.992Z",
+      //         updated_at: "2024-01-14T12:36:02.843Z",
+      //       },
+      //       // messages: [],
+      //     })
+      //   );
+      // }}
       >
         Create a conversation
       </Button>

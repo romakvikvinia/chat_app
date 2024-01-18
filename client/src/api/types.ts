@@ -26,9 +26,12 @@ export type ConversationType = {
   id: number;
   creator: UserType;
   recipient: UserType;
+  lastMessageSent: Omit<MessageType, "author">;
   createdAt: Date;
   updatedAt: Date;
 };
+
+export type ConversationMapType = Map<number, ConversationType>;
 
 export type ConversationsResponseType = Map<number, ConversationType>;
 

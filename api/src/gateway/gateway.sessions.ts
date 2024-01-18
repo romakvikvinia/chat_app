@@ -1,19 +1,22 @@
 import { Injectable } from '@nestjs/common';
 import { AuthenticatedSocket } from '../utils/interfaces';
 
-interface IGatewaySession {
-  getSocket(id: number);
+export interface IGatewaySessionManager {
+  getUserSocket(id: number): AuthenticatedSocket;
+  setUserSocket(id: number, socket: AuthenticatedSocket): void;
+  removeUser(id: number);
+  getSockets(): Map<number, AuthenticatedSocket>;
 }
 
 @Injectable()
-export class GatewaySessionManager implements IGatewaySession {
+export class GatewaySessionManager implements IGatewaySessionManager {
   private readonly sessions: Map<number, AuthenticatedSocket> = new Map();
 
-  getSocket(id: number) {
+  getUserSocket(id: number) {
     return this.sessions.get(id);
   }
 
-  setSocket(userId: number, socket: AuthenticatedSocket) {
+  setUserSocket(userId: number, socket: AuthenticatedSocket) {
     this.sessions.set(userId, socket);
   }
 
