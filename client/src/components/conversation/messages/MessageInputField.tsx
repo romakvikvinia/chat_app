@@ -4,6 +4,8 @@ import {
   MessageInputFieldContainerStyle,
 } from "../../../utils/styles";
 
+import styles from "./index.module.scss";
+
 type Props = {
   message: string;
   onMessage: (message: string) => void;
@@ -17,7 +19,7 @@ export const MessageInputField: React.FC<Props> = ({
 }) => {
   return (
     <MessageInputFieldContainerStyle>
-      <form onSubmit={onSubmit}>
+      <form onSubmit={onSubmit} className={styles.form}>
         <MessageInput
           value={message}
           onChange={(e) => onMessage(e.target.value)}

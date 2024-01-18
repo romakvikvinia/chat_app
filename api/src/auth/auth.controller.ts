@@ -36,7 +36,7 @@ export class AuthController {
   @Post('/signin')
   @UseGuards(LocalAuthGuard)
   signIn(@Body() loginAuthDto: LoginAuthDto) {
-    console.log(loginAuthDto);
+    // console.log(loginAuthDto);
   }
 
   @Get('/status')

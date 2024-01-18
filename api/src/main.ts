@@ -10,10 +10,15 @@ import * as passport from 'passport';
 import { TypeormStore } from 'connect-typeorm';
 import { DataSource } from 'typeorm';
 import { Session } from './users/entities/session.entity';
+import { WebsocketAdapter } from './gateway/gateway.adatper';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const config = app.get(ConfigService);
+
+  // socket
+  const websocketAdapter = new WebsocketAdapter(app);
+  app.useWebSocketAdapter(websocketAdapter);
 
   const sessionRepository = app.get(DataSource).getRepository(Session);
 
@@ -26,6 +31,7 @@ async function bootstrap() {
       secret: config.get<string>('cookie.secret'),
       resave: false,
       saveUninitialized: false,
+      name: 'CHAT_APP_SESSION_ID',
       cookie: {
         maxAge: 86400000, // 1 day
       },

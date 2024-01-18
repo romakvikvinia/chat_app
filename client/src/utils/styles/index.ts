@@ -96,7 +96,7 @@ export const ConversationSideBarHeader = styled.header`
   box-sizing: border-box;
   background-color: #151515;
   height: 80px;
-  font-wight: bold;
+  font-weight: bold;
   display: flex;
   justify-content: space-between;
   padding: 0 24px;
@@ -249,6 +249,7 @@ export const MessageItemDetails = styled.div`
 
 export const MessageItemContent = styled.div<MessageItemContainerProps>`
   padding: ${(props) => props.padding};
+  word-break: break-all;
 `;
 
 export const MessagePanelHeaderStyle = styled.header`

@@ -7,19 +7,21 @@ import {
   WebSocketServer,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
+import { AuthenticatedSocket } from '../utils/interfaces';
 
 @WebSocketGateway({
   cors: {
     origin: ['http://localhost:3000'],
+    credentials: true,
   },
 })
 export class MessageGateway implements OnGatewayConnection {
   @WebSocketServer()
   server: Server;
   constructor() {}
-  handleConnection(client: Socket, ...args: any[]) {
+  handleConnection(client: AuthenticatedSocket, ...args: any[]) {
     console.log(client);
-    console.log(args);
+    // console.log(args);
   }
 
   @SubscribeMessage('createMessage')
