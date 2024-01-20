@@ -80,9 +80,7 @@ export const chatAppApi = createApi({
         url: `/conversations`,
       }),
       transformResponse: (response: ConversationsResponseType) => {
-        console.log("hreeee");
         // let map = Map<number, ConversationType>();
-
         // response.forEach((conversation) => {
         //   map = map.set(conversation.id, conversation);
         // });

@@ -18,13 +18,16 @@ export const MessageInputField: React.FC<Props> = ({
   onSubmit,
 }) => {
   return (
-    <MessageInputFieldContainerStyle>
-      <form onSubmit={onSubmit} className={styles.form}>
-        <MessageInput
-          value={message}
-          onChange={(e) => onMessage(e.target.value)}
-        />
-      </form>
-    </MessageInputFieldContainerStyle>
+    <>
+      <MessageInputFieldContainerStyle>
+        <form onSubmit={onSubmit} className={styles.form}>
+          <MessageInput
+            value={message}
+            onChange={(e) => onMessage(e.target.value)}
+          />
+        </form>
+      </MessageInputFieldContainerStyle>
+      <div>is Typing...</div>
+    </>
   );
 };
