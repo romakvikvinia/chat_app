@@ -11,7 +11,9 @@ export const store = configureStore({
     [chatAppApi.reducerPath]: chatAppApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(chatAppApi.middleware),
+    getDefaultMiddleware({ serializableCheck: false }).concat(
+      chatAppApi.middleware
+    ),
   devTools: {
     serialize: {
       immutable: Immutable,

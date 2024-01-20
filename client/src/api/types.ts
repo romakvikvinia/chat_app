@@ -27,13 +27,13 @@ export type ConversationType = {
   creator: UserType;
   recipient: UserType;
   lastMessageSent: Omit<MessageType, "author">;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: string;
+  updatedAt: string;
 };
 
 export type ConversationMapType = Map<number, ConversationType>;
 
-export type ConversationsResponseType = Map<number, ConversationType>;
+export type ConversationsResponseType = ConversationType[]; //  Map<number, ConversationType>;
 
 export type ConversationMessagesQueryArgs = {
   id: number;
@@ -44,15 +44,15 @@ export type AuthorType = {
   firstName: string;
   lastName: string;
   email: string;
-  created_at: Date;
-  updated_at: Date;
+  created_at: string;
+  updated_at: string;
 };
 
 export type MessageType = {
   id: number;
   content: string;
   author: AuthorType;
-  createdAt: Date;
+  createdAt: string;
 };
 export type ConversationMessagesResponseType = MessageType[];
 
@@ -61,7 +61,7 @@ export type MessageEventPayload = {
   content: string;
   author: AuthorType;
   conversation: ConversationType;
-  createdAt: Date;
+  createdAt: string;
 };
 
 export type CreateMessageArgs = {

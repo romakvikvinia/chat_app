@@ -47,28 +47,25 @@ export const ConversationAside: React.FC<ConversationAsideProps> = ({}) => {
         </ConversationSideBarHeader>
         <ConversationItemsWrapper>
           {conversations &&
-            Array.from(conversations, ([_, conversation]) => conversation).map(
-              (conversation) => (
-                <ConversationItem
-                  key={`conversation-${conversation.id}`}
-                  onClick={() =>
-                    navigation(`/conversations/${conversation.id}`)
-                  }
-                >
-                  <div className={styles.conversationAvatar}></div>
-                  <div>
-                    <span className={styles.conversationName}>
-                      {`${getDisplayUser(conversation).firstName} ${
-                        getDisplayUser(conversation).lastName
-                      }`}
-                    </span>
-                    <span className={styles.conversationLastMessage}>
-                      {conversation.lastMessageSent?.content}
-                    </span>
-                  </div>
-                </ConversationItem>
-              )
-            )}
+            // Array.from(conversations, ([_, conversation]) => conversation).map(
+            conversations.map((conversation) => (
+              <ConversationItem
+                key={`conversation-${conversation.id}`}
+                onClick={() => navigation(`/conversations/${conversation.id}`)}
+              >
+                <div className={styles.conversationAvatar}></div>
+                <div>
+                  <span className={styles.conversationName}>
+                    {`${getDisplayUser(conversation).firstName} ${
+                      getDisplayUser(conversation).lastName
+                    }`}
+                  </span>
+                  <span className={styles.conversationLastMessage}>
+                    {conversation.lastMessageSent?.content}
+                  </span>
+                </div>
+              </ConversationItem>
+            ))}
         </ConversationItemsWrapper>
       </ConversationSideBarStyle>
     </>

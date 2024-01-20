@@ -80,12 +80,13 @@ export const chatAppApi = createApi({
         url: `/conversations`,
       }),
       transformResponse: (response: ConversationsResponseType) => {
-        let map = Map<number, ConversationType>();
+        console.log("hreeee");
+        // let map = Map<number, ConversationType>();
 
-        response.forEach((conversation) => {
-          map = map.set(conversation.id, conversation);
-        });
-        return map;
+        // response.forEach((conversation) => {
+        //   map = map.set(conversation.id, conversation);
+        // });
+        return response;
       },
       providesTags: ["Conversations"],
     }),

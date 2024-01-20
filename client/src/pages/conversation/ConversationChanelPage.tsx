@@ -7,12 +7,17 @@ import {
 import { useParams } from "react-router-dom";
 import { MessagePanel } from "../../components/conversation/messages/MessagePanel";
 import { SocketContext } from "../../utils/context/socket.context";
-import { ConversationMapType, MessageEventPayload } from "../../api/types";
+import {
+  ConversationsResponseType,
+  MessageEventPayload,
+} from "../../api/types";
 import { useDispatch } from "react-redux";
-import { ThunkDispatch, UnknownAction } from "@reduxjs/toolkit";
+
+import { AppDispatch } from "../../package/store";
 
 export const ConversationChanelPage = () => {
-  const dispatch = useDispatch<ThunkDispatch<any, any, UnknownAction>>();
+  // const dispatch = useDispatch<ThunkDispatch<RootState, any, UnknownAction>>();
+  const dispatch = useDispatch<AppDispatch>();
   const { id } = useParams();
   const socket = useContext(SocketContext);
 
@@ -39,18 +44,24 @@ export const ConversationChanelPage = () => {
           }
         )
       );
+
+      // dispatch(chatAppApi.util.patchQueryData("conversations", undefined, []));
+      // dispatch(
+      //   chatAppApi.util.prefetch("conversations", undefined, { force: true })
+      // );
       dispatch(
         chatAppApi.util.updateQueryData(
           "conversations",
           undefined,
-          (conversations: any) => {
-            console.log("conversations", conversations);
-            // draftMessages.unshift(message);
-            const currentConversation = conversations.get(conversation.id);
-            if (!currentConversation) return;
+          (conversations: ConversationsResponseType) => {
+            const { author, ...restMessage } = message;
+            const index = conversations.findIndex(
+              (c) => c.id === conversation.id
+            );
+            conversations[index].lastMessageSent = restMessage;
+            const [currentConversation] = conversations.splice(index, 1);
+            conversations.unshift(currentConversation);
 
-            currentConversation.lastMessageSent = message;
-            conversations.set(conversation.id, currentConversation);
             return conversations;
           }
         )
