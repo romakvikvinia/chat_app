@@ -6,6 +6,8 @@ import {
   ConversationMessagesResponseType,
   ConversationType,
   ConversationsResponseType,
+  CreateConversationArgsType,
+  CreateConversationResponseType,
   CreateMessageArgs,
   CreateMessageResponseType,
   GetMeResponseType,
@@ -116,6 +118,24 @@ export const chatAppApi = createApi({
         method: "POST",
       }),
     }),
+
+    /**
+     * create Message
+     */
+
+    createConversation: builder.mutation<
+      CreateConversationResponseType,
+      CreateConversationArgsType
+    >({
+      query: ({ email, message }) => ({
+        url: `/conversations`,
+        method: "POST",
+        body: {
+          email,
+          message,
+        },
+      }),
+    }),
   }),
 });
 
@@ -126,4 +146,5 @@ export const {
   useConversationsQuery,
   useLazyConversationMessagesQuery,
   useCreateMessageMutation,
+  useCreateConversationMutation,
 } = chatAppApi;

@@ -37,7 +37,7 @@ export const CreateConversationModal: React.FC<
           <MdClose size={24} color="red" onClick={() => close()} />
         </ModalHeader>
         <ModalContentBody>
-          <CreateConversationForm />
+          <CreateConversationForm handleClose={close} />
         </ModalContentBody>
       </ModalContainer>
     </OverlayStyle>

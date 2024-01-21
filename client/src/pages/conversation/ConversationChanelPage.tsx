@@ -27,12 +27,13 @@ export const ConversationChanelPage = () => {
   useEffect(() => {
     if (id) fetchConversationMessages({ id: parseInt(id) });
   }, [id, fetchConversationMessages]);
+  useEffect(() => {
+    socket.emit("onClientConnect", {
+      conversationId: parseInt(id!),
+    });
+  }, [id, socket]);
 
   useEffect(() => {
-    socket.on("connect", () => {
-      console.log("connection success");
-    });
-
     socket.on("onMessage", (payload: MessageEventPayload) => {
       const { conversation, ...message } = payload;
       dispatch(

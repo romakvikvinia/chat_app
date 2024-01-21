@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback, useEffect } from "react";
 import {
   Button,
   InputContainer,
@@ -8,59 +8,72 @@ import {
 } from "../../../utils/styles";
 import styles from "../index.module.scss";
 import { useDispatch } from "react-redux";
-import { addConversation } from "../../../package/store/slice/conversation.slice";
+import { useForm } from "react-hook-form";
+import { CreateConversationArgsType } from "../../../api/types";
+import {
+  chatAppApi,
+  useCreateConversationMutation,
+} from "../../../api/chat.api";
+import { AppDispatch } from "../../../package/store";
 
-export const CreateConversationForm = () => {
-  const dispatch = useDispatch();
+type CreateConversationFormProps = {
+  handleClose: () => void;
+};
+
+export const CreateConversationForm: React.FC<CreateConversationFormProps> = ({
+  handleClose,
+}) => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<CreateConversationArgsType>({});
+
+  const dispatch = useDispatch<AppDispatch>();
+
+  const [createConversation, { data, isLoading, isSuccess }] =
+    useCreateConversationMutation();
+
+  const onSubmit = useCallback(
+    (data: CreateConversationArgsType) => {
+      createConversation(data);
+    },
+    [createConversation]
+  );
+
+  useEffect(() => {
+    if (isSuccess && !isLoading) {
+      dispatch(
+        chatAppApi.util.updateQueryData(
+          "conversations",
+          undefined,
+          (conversationsData) => {
+            if (data) conversationsData.unshift(data);
+          }
+        )
+      );
+      handleClose();
+    }
+  }, [data, isLoading, isSuccess, dispatch, handleClose]);
+
   return (
     <form
       className={styles.createConversationForm}
-      onSubmit={(e) => e.preventDefault()}
+      onSubmit={handleSubmit(onSubmit)}
     >
       <section>
         <InputContainer backgroundColor="#161616">
           <InputLabel>Recipient</InputLabel>
-          <InputField />
+          <InputField {...register("email", { required: true })} />
         </InputContainer>
       </section>
       <section className={styles.message}>
         <InputContainer backgroundColor="#161616">
           <InputLabel>Message (Optional)</InputLabel>
-          <TextField />
+          <TextField {...register("message", { required: true })} />
         </InputContainer>
       </section>
-      <Button
-      // onClick={() => {
-      //   dispatch(
-      //     addConversation({
-      //       id: 1,
-      //       createdAt: new Date(),
-      //       updatedAt: new Date(),
-      //       creator: {
-      //         id: 2,
-      //         email: "romakvikvinia@gmail.com",
-      //         firstName: "Roma",
-      //         lastName: "KV",
-
-      //         created_at: "2024-01-14T12:36:12.994Z",
-      //         updated_at: "2024-01-14T12:36:46.835Z",
-      //       },
-      //       recipient: {
-      //         id: 1,
-      //         email: "nano@gmail.com",
-      //         firstName: "Nano",
-      //         lastName: "Kv",
-
-      //         created_at: "2024-01-14T12:35:49.992Z",
-      //         updated_at: "2024-01-14T12:36:02.843Z",
-      //       },
-      //       // messages: [],
-      //     })
-      //   );
-      // }}
-      >
-        Create a conversation
-      </Button>
+      <Button>Create a conversation</Button>
     </form>
   );
 };

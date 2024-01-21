@@ -1,11 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
 
 export class CreateConversationDto {
   @ApiProperty()
-  @IsNumber()
+  @IsEmail()
   @IsNotEmpty()
-  recipientId: number;
+  email: string;
 
   @ApiProperty()
   @IsNotEmpty()

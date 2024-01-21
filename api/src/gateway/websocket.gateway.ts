@@ -1,5 +1,6 @@
 import { OnEvent } from '@nestjs/event-emitter';
 import {
+  ConnectedSocket,
   MessageBody,
   OnGatewayConnection,
   SubscribeMessage,
@@ -30,15 +31,26 @@ export class MessageGateway implements OnGatewayConnection {
 
   handleConnection(client: AuthenticatedSocket, ...args: any[]) {
     console.log('Incoming connection to socket');
-    console.log(args);
+
     this.session.setUserSocket(client.user.id, client);
-    console.log(this.session.getSockets());
+    client.join('hello-world');
+    console.log(client.rooms);
   }
 
   @SubscribeMessage('createMessage')
   handleCreateMessage(@MessageBody() data: any) {
     console.log('handleCreateMessage', data);
     // this.server.emit();
+  }
+
+  @SubscribeMessage('onClientConnect')
+  onClientConnect(
+    @MessageBody() body: any,
+    @ConnectedSocket() client: AuthenticatedSocket,
+  ) {
+    console.log('onClientConnect', body);
+
+    console.log('client', client.user);
   }
 
   @OnEvent('message.create')

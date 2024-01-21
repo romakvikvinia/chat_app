@@ -49,6 +49,10 @@ export class WebsocketAdapter extends IoAdapter {
         where: { id: signedCookie },
       });
 
+      if (!sessionDB) {
+        console.log('signedCookie does not exists');
+        return next(new Error(`Unauthorized`));
+      }
       const userDB = plainToInstance(
         User,
         JSON.parse(sessionDB.json).passport.user,

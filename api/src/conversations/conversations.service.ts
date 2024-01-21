@@ -29,10 +29,10 @@ export class ConversationsService implements IConversationsService {
 
   async create(
     creator: User,
-    { recipientId, message: content }: CreateConversationParams,
+    { email, message: content }: CreateConversationParams,
   ) {
     // const { username, message: content } = input;
-    const recipient = await this.userService.findUser({ id: recipientId });
+    const recipient = await this.userService.findUser({ email });
     if (!recipient) throw new NotFoundException('Can not found recipient');
     if (creator.id === recipient.id)
       throw new BadRequestException('Cannot create Conversation with yourself');
@@ -49,15 +49,22 @@ export class ConversationsService implements IConversationsService {
       creator,
       recipient,
     });
+
     const conversation =
       await this.conversationRepository.save(newConversation);
+
     const newMessage = this.messageRepository.create({
       content,
       conversation,
       author: creator,
     });
-    await this.messageRepository.save(newMessage);
-    return conversation;
+    const message = await this.messageRepository.save(newMessage);
+
+    delete message.conversation;
+
+    conversation.lastMessageSent = message;
+
+    return this.conversationRepository.save(conversation);
   }
 
   async getConversations(id: number): Promise<Conversation[]> {

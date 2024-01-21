@@ -70,3 +70,9 @@ export type CreateMessageArgs = {
 };
 
 export type CreateMessageResponseType = {};
+
+export type CreateConversationArgsType = {
+  email: string;
+  message: string;
+};
+export type CreateConversationResponseType = ConversationType;
