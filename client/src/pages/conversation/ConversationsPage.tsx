@@ -5,6 +5,7 @@ import { Outlet } from "react-router-dom";
 import { useAppDispatch } from "../../package/store/hooks";
 import { SocketContext } from "../../utils/context/socket.context";
 import {
+  ConversationType,
   ConversationsResponseType,
   MessageEventPayload,
 } from "../../api/types";
@@ -50,9 +51,27 @@ export const ConversationsPage = () => {
         )
       );
     });
+
+    socket.on("onConversation", (data: ConversationType) => {
+      dispatch(
+        chatAppApi.util.updateQueryData(
+          "conversations",
+          undefined,
+          (conversations: ConversationsResponseType) => {
+            if (conversations) {
+              conversations.unshift(data);
+              return conversations;
+            } else {
+              return [data];
+            }
+          }
+        )
+      );
+    });
     return () => {
       socket.off("connect");
       socket.off("onMessage");
+      socket.off("onConversation");
     };
   }, [socket, dispatch]);
   return (

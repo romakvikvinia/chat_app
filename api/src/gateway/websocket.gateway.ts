@@ -12,7 +12,7 @@ import { AuthenticatedSocket } from '../utils/interfaces';
 import { Services } from '../utils/constants';
 import { IGatewaySessionManager } from './gateway.sessions';
 import { Inject } from '@nestjs/common';
-import { Message } from '../utils/typeorm';
+import { Conversation, Message } from '../utils/typeorm';
 
 @WebSocketGateway({
   cors: {
@@ -71,5 +71,15 @@ export class MessageGateway implements OnGatewayConnection {
 
     if (recipientSocket) recipientSocket.emit('onMessage', payload);
     // this.server.emit('onMessage', payload);
+  }
+
+  @OnEvent('conversation.created')
+  onConversationCreatedEvent(payload: Conversation) {
+    console.log('event ');
+    console.log(payload);
+
+    const recipientSocket = this.session.getUserSocket(payload.recipient.id);
+
+    if (recipientSocket) recipientSocket.emit('onConversation', payload);
   }
 }

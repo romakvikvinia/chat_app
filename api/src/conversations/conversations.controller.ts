@@ -18,6 +18,7 @@ import { IConversationsService } from './conversations';
 import { GetUser } from '../auth/decorators/user.decorator';
 import { User } from '../utils/typeorm';
 import { ApiTags } from '@nestjs/swagger';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 
 @ApiTags('Conversations')
 @Controller(Routes.CONVERSATIONS)
@@ -26,6 +27,7 @@ export class ConversationsController {
   constructor(
     @Inject(Services.CONVERSATIONS)
     private readonly conversationsService: IConversationsService,
+    private readonly eventEmitter: EventEmitter2,
   ) {}
 
   @Post()
@@ -33,7 +35,14 @@ export class ConversationsController {
     @GetUser() user: User,
     @Body() createConversationDto: CreateConversationDto,
   ) {
-    return this.conversationsService.create(user, createConversationDto);
+    const conversation = await this.conversationsService.create(
+      user,
+      createConversationDto,
+    );
+
+    this.eventEmitter.emit('conversation.created', conversation);
+
+    return conversation;
   }
 
   @Get()
