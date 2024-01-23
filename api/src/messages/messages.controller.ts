@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   Inject,
+  ParseIntPipe,
 } from '@nestjs/common';
 
 import { CreateMessageDto } from './dto/create-message.dto';
@@ -16,7 +17,9 @@ import { IMessageService } from './message';
 import { GetUser } from '../auth/decorators/user.decorator';
 import { User } from '../utils/typeorm';
 import { EventEmitter2 } from '@nestjs/event-emitter';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Messages')
 @Controller(Routes.MESSAGES)
 export class MessagesController {
   constructor(
@@ -28,10 +31,13 @@ export class MessagesController {
   @Post()
   async create(
     @GetUser() user: User,
-    @Body() createMessageDto: CreateMessageDto,
+    @Param('id', ParseIntPipe) conversationId: number,
+    @Body()
+    createMessageDto: CreateMessageDto,
   ) {
     const message = await this.messagesService.create({
       ...createMessageDto,
+      conversationId,
       user,
     });
 
@@ -41,11 +47,6 @@ export class MessagesController {
   }
 
   @Get()
-  findAll() {
-    // return this.messagesService.findAll();
-  }
-
-  @Get(':id')
   getMessagesFromConversations(@GetUser() user: User, @Param('id') id: number) {
     return this.messagesService.getMessagesByConversationId(id);
   }
@@ -61,8 +62,16 @@ export class MessagesController {
     // return this.messagesService.update(+id, updateMessageDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    // return this.messagesService.remove(+id);
+  @Delete(':messageId')
+  remove(
+    @GetUser() user: User,
+    @Param('id', ParseIntPipe) conversationId: number,
+    @Param('messageId', ParseIntPipe) messageId: number,
+  ) {
+    return this.messagesService.deleteMessage({
+      userId: user.id,
+      messageId,
+      conversationId,
+    });
   }
 }

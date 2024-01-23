@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { UpdateMessageDto } from './dto/update-message.dto';
 import { IMessageService } from './message';
-import { CreateMessageParams } from '../utils/types';
+import { CreateMessageParams, DeleteMessageType } from '../utils/types';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Conversation, Message } from '../utils/typeorm';
 import { Repository } from 'typeorm';
@@ -71,5 +71,49 @@ export class MessagesService implements IMessageService {
 
   remove(id: number) {
     return `This action removes a #${id} message`;
+  }
+
+  async deleteMessage(input: DeleteMessageType) {
+    // cons
+
+    const conversation = await this.conversationRepository
+      .createQueryBuilder('conversation')
+      .leftJoinAndSelect('conversation.lastMessageSent', 'lastMessageSent')
+      .leftJoinAndSelect('conversation.messages', 'messages')
+      .where('conversation.id = :id', { id: input.conversationId })
+      .orderBy('messages.createdAt', 'DESC')
+      .limit(5)
+      .getOne();
+
+    if (!conversation)
+      throw new NotFoundException(`Conversation doesn't exists`);
+
+    const message = await this.messageRepository.findOne({
+      where: {
+        id: input.messageId,
+        author: { id: input.userId },
+        conversation: { id: input.conversationId },
+      },
+    });
+
+    if (!message) throw new NotFoundException(`Message doesn't exists`);
+
+    if (conversation.lastMessageSent.id !== message.id) {
+      await this.messageRepository.delete({ id: message.id });
+      return message;
+    }
+
+    const length = conversation.messages.length;
+
+    if (length === 1) {
+      conversation.lastMessageSent = null;
+    } else {
+      const messages = conversation.messages.filter((i) => i.id !== message.id);
+      conversation.lastMessageSent = messages[messages.length - 1];
+    }
+
+    await this.conversationRepository.save(conversation);
+    await this.messageRepository.delete({ id: message.id });
+    return message;
   }
 }

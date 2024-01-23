@@ -37,3 +37,9 @@ export type CreateMessageParams = {
   conversationId: number;
   user: User;
 };
+
+export type DeleteMessageType = {
+  userId: number;
+  conversationId: number;
+  messageId: number;
+};

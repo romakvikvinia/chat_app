@@ -96,7 +96,7 @@ export const chatAppApi = createApi({
       ConversationMessagesQueryArgs
     >({
       query: ({ id }) => ({
-        url: `/messages/${id}`,
+        url: `conversations/${id}/messages`,
       }),
 
       providesTags: ["Conversation_messages"],
@@ -110,8 +110,8 @@ export const chatAppApi = createApi({
       CreateMessageArgs
     >({
       query: ({ conversationId, content }) => ({
-        url: `/messages`,
-        body: { conversationId, content },
+        url: `/conversations/${conversationId}/messages`,
+        body: { content },
         method: "POST",
       }),
     }),
