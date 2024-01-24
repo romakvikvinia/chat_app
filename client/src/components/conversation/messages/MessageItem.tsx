@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { formatRelative } from "date-fns";
 import { MessageType } from "../../../api/types";
 import {
@@ -18,8 +18,18 @@ export const MessageItem: React.FC<MessageItemProps> = ({
   message,
   showAuthor,
 }) => {
+  const handleContextMenu = useCallback(
+    (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+      e.preventDefault();
+    },
+    []
+  );
+
   return (
-    <MessageItemContainer key={`conversation-message-${message.id}`}>
+    <MessageItemContainer
+      key={`conversation-message-${message.id}`}
+      onContextMenu={handleContextMenu}
+    >
       {showAuthor && <MessageItemAvatar />}
       <MessageItemDetails>
         {showAuthor && (
