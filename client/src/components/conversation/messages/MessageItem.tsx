@@ -12,23 +12,18 @@ import {
 type MessageItemProps = {
   showAuthor: boolean;
   message: MessageType;
+  onContextMenu: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
 };
 
 export const MessageItem: React.FC<MessageItemProps> = ({
   message,
   showAuthor,
+  onContextMenu,
 }) => {
-  const handleContextMenu = useCallback(
-    (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-      e.preventDefault();
-    },
-    []
-  );
-
   return (
     <MessageItemContainer
       key={`conversation-message-${message.id}`}
-      onContextMenu={handleContextMenu}
+      onContextMenu={onContextMenu}
     >
       {showAuthor && <MessageItemAvatar />}
       <MessageItemDetails>
