@@ -8,6 +8,8 @@ import {
   ConversationType,
   ConversationsResponseType,
   MessageEventPayload,
+  MessageType,
+  OnMessageDeleteEventPayload,
 } from "../../api/types";
 import { chatAppApi } from "../../api/chat.api";
 
@@ -68,10 +70,27 @@ export const ConversationsPage = () => {
         )
       );
     });
+
+    socket.on("onMessageDelete", (payload: OnMessageDeleteEventPayload) => {
+      const { conversationId, ...message } = payload;
+      dispatch(
+        chatAppApi.util.updateQueryData(
+          "conversationMessages",
+          { id: conversationId },
+          (draftMessages: MessageType[]) => {
+            draftMessages = draftMessages.filter(
+              (msg) => msg.id !== message.id
+            );
+            return draftMessages;
+          }
+        )
+      );
+    });
     return () => {
       socket.off("connect");
       socket.off("onMessage");
       socket.off("onConversation");
+      socket.off("onMessageDelete");
     };
   }, [socket, dispatch]);
   return (

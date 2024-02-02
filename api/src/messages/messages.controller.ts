@@ -63,15 +63,22 @@ export class MessagesController {
   }
 
   @Delete(':messageId')
-  remove(
+  async remove(
     @GetUser() user: User,
     @Param('id', ParseIntPipe) conversationId: number,
     @Param('messageId', ParseIntPipe) messageId: number,
   ) {
-    return this.messagesService.deleteMessage({
+    const message = await this.messagesService.deleteMessage({
       userId: user.id,
       messageId,
       conversationId,
     });
+
+    this.eventEmitter.emit('message.deleted', {
+      userId: user.id,
+      message,
+      conversationId,
+    });
+    return message;
   }
 }

@@ -1,19 +1,21 @@
 import { Map } from "immutable";
+
 export type UserType = {
   id: number;
   email: string;
   firstName: string;
   lastName: string;
-
   created_at: string;
   updated_at: string;
 };
+
 export type SignUpInput = {
   email: string;
   firstName: string;
   lastName: string;
   password: string;
 };
+
 export type SignUpResponseType = {};
 
 export type SignInInput = Pick<SignUpInput, "email" | "password">;
@@ -80,6 +82,13 @@ export type CreateConversationResponseType = ConversationType;
 /**
  * Delete Message
  */
+
+export type OnMessageDeleteEventPayload = {
+  id: number;
+  conversationId: number;
+  content: string;
+  createdAt: string;
+};
 
 export type DeleteMessageResponseType = {};
 

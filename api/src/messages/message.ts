@@ -6,3 +6,9 @@ export interface IMessageService {
   getMessagesByConversationId(conversationId: number): Promise<Message[]>;
   deleteMessage(input: DeleteMessageType);
 }
+
+export interface IOnDeleteMessage {
+  userId: number;
+  message: Message;
+  conversationId: number;
+}

@@ -13,6 +13,8 @@ import { Services } from '../utils/constants';
 import { IGatewaySessionManager } from './gateway.sessions';
 import { Inject } from '@nestjs/common';
 import { Conversation, Message } from '../utils/typeorm';
+import { IOnDeleteMessage } from '../messages/message';
+import { IConversationsService } from 'src/conversations/conversations';
 
 @WebSocketGateway({
   cors: {
@@ -27,6 +29,8 @@ export class MessageGateway implements OnGatewayConnection {
   constructor(
     @Inject(Services.GATEWAY_SESSION_MANAGER)
     private readonly session: IGatewaySessionManager,
+    @Inject(Services.CONVERSATIONS)
+    private readonly conversationService: IConversationsService,
   ) {}
 
   handleConnection(client: AuthenticatedSocket, ...args: any[]) {
@@ -75,11 +79,24 @@ export class MessageGateway implements OnGatewayConnection {
 
   @OnEvent('conversation.created')
   onConversationCreatedEvent(payload: Conversation) {
-    console.log('event ');
-    console.log(payload);
-
     const recipientSocket = this.session.getUserSocket(payload.recipient.id);
 
     if (recipientSocket) recipientSocket.emit('onConversation', payload);
+  }
+
+  @OnEvent('message.deleted')
+  async onMessageDelete({ userId, conversationId, message }: IOnDeleteMessage) {
+    const conversation =
+      await this.conversationService.findConversationById(conversationId);
+
+    if (!conversation) return;
+
+    const recipientSocket =
+      conversation.creator.id === userId
+        ? this.session.getUserSocket(conversation.recipient.id)
+        : this.session.getUserSocket(conversation.creator.id);
+
+    if (recipientSocket)
+      recipientSocket.emit('onMessageDelete', { ...message, conversationId });
   }
 }

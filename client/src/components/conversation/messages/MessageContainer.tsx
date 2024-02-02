@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { ContextMenuStyle, MessageContainerStyle } from "../../../utils/styles";
-import { MessageType } from "../../../api/types";
+import { MessageContainerStyle } from "../../../utils/styles";
+import { MessageType, UserType } from "../../../api/types";
 
 import { MessageItem } from "./MessageItem";
 import {
@@ -8,6 +8,7 @@ import {
   MessageMenuDefaultValue,
 } from "../../../utils/context/message.context";
 import { MessageContextMenu } from "./MessageContextMenu";
+import { useAppSelector } from "../../../package/store/hooks";
 
 type Props = {
   messages: MessageType[];
@@ -20,6 +21,10 @@ export interface IMessageContainerState {
 }
 
 export const MessageContainer: React.FC<Props> = ({ messages }) => {
+  const user = useAppSelector((state) => state.chat_app.queries)[
+    "getMe(undefined)"
+  ] as { data: UserType };
+
   const [state, setState] = useState<IMessageContainerState>({
     message: null,
     showContextMenu: false,
@@ -92,9 +97,13 @@ export const MessageContainer: React.FC<Props> = ({ messages }) => {
               />
             );
         })}
-        {state.showContextMenu && (
-          <MessageContextMenu position={state.position} />
-        )}
+        {state.showContextMenu &&
+          user &&
+          user.data &&
+          user.data.id &&
+          user.data.id === state.message?.author.id && (
+            <MessageContextMenu position={state.position} />
+          )}
       </MessageContainerStyle>
     </MessageMenuContext.Provider>
   );
