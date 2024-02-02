@@ -273,7 +273,7 @@ export const ContextMenuStyle = styled.div<ContextMenuProps>`
   box-sizing: border-box;
   position: fixed;
   width: 200px;
-  background-color: #161616;
+  background-color: #252525;
   ${(props) => css`
     top: ${props.top}px;
     left: ${props.left}px;
@@ -281,5 +281,16 @@ export const ContextMenuStyle = styled.div<ContextMenuProps>`
 
   ul {
     list-style: none;
+    margin: 0;
+    padding: 10px;
+  }
+
+  ul li {
+    padding: 12px 16px;
+    border-radius: 10px;
+  }
+  ul li:hover {
+    cursor: pointer;
+    background-color: #1f1f1f;
   }
 `;

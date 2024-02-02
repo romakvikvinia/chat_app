@@ -7,7 +7,10 @@ import {
   CreateConversationResponseType,
   CreateMessageArgs,
   CreateMessageResponseType,
+  DeleteMessageArgsType,
+  DeleteMessageResponseType,
   GetMeResponseType,
+  MessageType,
   SignInInput,
   SignInResponseType,
   SignUpInput,
@@ -133,6 +136,45 @@ export const chatAppApi = createApi({
         },
       }),
     }),
+    /**
+     * Delete Message
+     */
+
+    deleteMessage: builder.mutation<
+      DeleteMessageResponseType,
+      DeleteMessageArgsType
+    >({
+      query: ({ conversationId, messageId }) => ({
+        url: `/conversations/${conversationId}/messages/${messageId}`,
+        method: "DELETE",
+      }),
+      async onQueryStarted(
+        { conversationId, messageId },
+        { dispatch, queryFulfilled }
+      ) {
+        try {
+          await queryFulfilled;
+          dispatch(
+            chatAppApi.util.updateQueryData(
+              "conversationMessages",
+              { id: conversationId },
+              (draftMessages: MessageType[]) => {
+                draftMessages = draftMessages.filter(
+                  (msg) => msg.id !== messageId
+                );
+                return draftMessages;
+              }
+            )
+          );
+        } catch (error) {
+          console.log("error", error);
+        }
+      },
+    }),
+
+    /**
+     *
+     */
   }),
 });
 
@@ -144,4 +186,5 @@ export const {
   useLazyConversationMessagesQuery,
   useCreateMessageMutation,
   useCreateConversationMutation,
+  useDeleteMessageMutation,
 } = chatAppApi;

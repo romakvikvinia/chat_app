@@ -76,3 +76,14 @@ export type CreateConversationArgsType = {
   message: string;
 };
 export type CreateConversationResponseType = ConversationType;
+
+/**
+ * Delete Message
+ */
+
+export type DeleteMessageResponseType = {};
+
+export type DeleteMessageArgsType = {
+  conversationId: number;
+  messageId: number;
+};
