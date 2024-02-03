@@ -15,6 +15,11 @@ import { Inject } from '@nestjs/common';
 import { Conversation, Message } from '../utils/typeorm';
 import { IOnDeleteMessage } from '../messages/message';
 import { IConversationsService } from 'src/conversations/conversations';
+import {
+  OnConversationJoinBodyType,
+  OnConversationLeaveBodyType,
+  OnUserTypingBodyType,
+} from './gateway';
 
 @WebSocketGateway({
   cors: {
@@ -37,7 +42,6 @@ export class MessageGateway implements OnGatewayConnection {
     console.log('Incoming connection to socket');
 
     this.session.setUserSocket(client.user.id, client);
-    client.join('hello-world');
     console.log(client.rooms);
   }
 
@@ -47,14 +51,48 @@ export class MessageGateway implements OnGatewayConnection {
     // this.server.emit();
   }
 
-  @SubscribeMessage('onClientConnect')
+  @SubscribeMessage('onConversationJoin')
   onClientConnect(
-    @MessageBody() body: any,
+    @MessageBody() body: OnConversationJoinBodyType,
     @ConnectedSocket() client: AuthenticatedSocket,
   ) {
-    console.log('onClientConnect', body);
+    console.log('onConversationJoin', body.conversationId);
 
-    console.log('client', client.user);
+    client.join(`${body.conversationId}`);
+    client.to(`${body.conversationId}`).emit('userJoin');
+    console.log('client', client.rooms);
+  }
+
+  @SubscribeMessage('onConversationLeave')
+  onConversationLeave(
+    @MessageBody() body: OnConversationLeaveBodyType,
+    @ConnectedSocket() client: AuthenticatedSocket,
+  ) {
+    console.log(`onConversationLeave: ${body.conversationId}`);
+    client.leave(`${body.conversationId}`);
+    client.to(`${body.conversationId}`).emit('userLeave');
+    console.log('client', client.rooms);
+  }
+
+  @SubscribeMessage('onTypingStart')
+  userTypingStart(
+    @ConnectedSocket() client: AuthenticatedSocket,
+    @MessageBody() body: OnUserTypingBodyType,
+  ) {
+    console.log('onTypingStart', body.conversationId);
+    console.log(client.rooms);
+    client.to(`${body.conversationId}`).emit('onTypingStart');
+    // this.server.to(`${body.conversationId}`).emit('onTypingStart');
+  }
+  @SubscribeMessage('onTypingStop')
+  userTypingStop(
+    @ConnectedSocket() client: AuthenticatedSocket,
+    @MessageBody() body: OnUserTypingBodyType,
+  ) {
+    console.log('onTypingStop', body.conversationId);
+    console.log(client.rooms);
+    client.to(`${body.conversationId}`).emit('onTypingStop');
+    // this.server.to(`${body.conversationId}`).emit('onTypingStop');
   }
 
   @OnEvent('message.create')

@@ -8,14 +8,17 @@ import styles from "./index.module.scss";
 
 type Props = {
   message: string;
+
   onMessage: (message: string) => void;
   onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
+  onSendTypingStatus: () => void;
 };
 
 export const MessageInputField: React.FC<Props> = ({
   message,
   onMessage,
   onSubmit,
+  onSendTypingStatus,
 }) => {
   return (
     <>
@@ -24,10 +27,10 @@ export const MessageInputField: React.FC<Props> = ({
           <MessageInput
             value={message}
             onChange={(e) => onMessage(e.target.value)}
+            onKeyDown={onSendTypingStatus}
           />
         </form>
       </MessageInputFieldContainerStyle>
-      <div>is Typing...</div>
     </>
   );
 };

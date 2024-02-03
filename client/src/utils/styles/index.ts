@@ -294,3 +294,13 @@ export const ContextMenuStyle = styled.div<ContextMenuProps>`
     background-color: #1f1f1f;
   }
 `;
+
+export const MessagesTypingStatus = styled.div`
+  width: 100%;
+  margin-top: 10px 0;
+  font-size: 11px;
+  color: #555555;
+  font-style: italic;
+  box-sizing: border-box;
+  height: 20px;
+`;
